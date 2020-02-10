@@ -1,5 +1,6 @@
 package com.slepnev.studentportal
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -43,6 +44,21 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         rvPortals.layoutManager = GridLayoutManager(this@MainActivity, 2)
         rvPortals.adapter = portalAdapter
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            when(requestCode) {
+                ADD_PORTAL_REQUEST_CODE -> {
+                    val portal = data!!.getParcelableExtra<Portal>(EXTRA_PORTAL)
+                    portals.add(portal)
+                    portalAdapter.notifyDataSetChanged()
+                }
+                else -> {
+                    super.onActivityResult(requestCode, resultCode, data)
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
