@@ -2,11 +2,13 @@ package com.slepnev.studentportal
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.recyclerview.widget.GridLayoutManager
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,13 +17,6 @@ import kotlinx.android.synthetic.main.content_main.*
 const val ADD_PORTAL_REQUEST_CODE = 100
 
 class MainActivity : AppCompatActivity() {
-
-    private val portals = arrayListOf<Portal>(
-        Portal("test", "http://test.test/"),
-        Portal("test", "http://test.test/"),
-        Portal("test", "http://test.test/")
-    )
-    private val portalAdapter = PortalAdapter(portals)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val portals = arrayListOf<Portal>()
+    private val portalAdapter = PortalAdapter(portals) { portalItem: Portal -> portalItemClicked(portalItem)}
+
     private fun startAddActivity() {
         val intent = Intent(this, AddActivity::class.java)
         startActivityForResult(intent, ADD_PORTAL_REQUEST_CODE)
@@ -44,6 +42,12 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         rvPortals.layoutManager = GridLayoutManager(this@MainActivity, 2)
         rvPortals.adapter = portalAdapter
+    }
+
+    private fun portalItemClicked(portalItem: Portal) {
+        val builder = CustomTabsIntent.Builder()
+        val customTabsIntent = builder.build()
+        customTabsIntent.launchUrl(this, Uri.parse(portalItem.url))
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
