@@ -1,5 +1,6 @@
 package com.slepnev.studentportal
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+
+const val ADD_PORTAL_REQUEST_CODE = 100
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,11 +29,16 @@ class MainActivity : AppCompatActivity() {
 
         initViews()
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        fab.setOnClickListener {
+            startAddActivity()
         }
     }
+
+    private fun startAddActivity() {
+        val intent = Intent(this, AddActivity::class.java)
+        startActivityForResult(intent, ADD_PORTAL_REQUEST_CODE)
+    }
+
 
     private fun initViews() {
         rvPortals.layoutManager = GridLayoutManager(this@MainActivity, 2)
